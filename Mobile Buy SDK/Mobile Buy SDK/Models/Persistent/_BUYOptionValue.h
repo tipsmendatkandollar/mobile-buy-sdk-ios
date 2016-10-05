@@ -37,9 +37,11 @@ extern const struct BUYOptionValueAttributes {
 } BUYOptionValueAttributes;
 
 extern const struct BUYOptionValueRelationships {
+	__unsafe_unretained NSString *option;
 	__unsafe_unretained NSString *variants;
 } BUYOptionValueRelationships;
 
+@class BUYOption;
 @class BUYProductVariant;
 
 @class BUYOptionValue;
@@ -73,6 +75,8 @@ extern const struct BUYOptionValueRelationships {
  */
 @property (nonatomic, strong) NSString* value;
 
+@property (nonatomic, strong) BUYOption *option;
+
 /**
  * Inverse of ProductVariant.optionValue.
  */
@@ -95,6 +99,9 @@ extern const struct BUYOptionValueRelationships {
 
 - (NSString*)primitiveValue;
 - (void)setPrimitiveValue:(NSString*)value;
+
+- (BUYOption *)primitiveOption;
+- (void)setPrimitiveOption:(BUYOption *)value;
 
 - (NSMutableSet *)primitiveVariants;
 - (void)setPrimitiveVariants:(NSMutableSet *)value;

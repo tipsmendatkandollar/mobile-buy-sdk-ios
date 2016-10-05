@@ -36,6 +36,7 @@ const struct BUYOptionAttributes BUYOptionAttributes = {
 
 const struct BUYOptionRelationships BUYOptionRelationships = {
 	.product = @"product",
+	.values = @"values",
 };
 
 const struct BUYOptionUserInfo BUYOptionUserInfo = {
@@ -92,6 +93,19 @@ const struct BUYOptionUserInfo BUYOptionUserInfo = {
 #if defined CORE_DATA_PERSISTENCE
 @dynamic product;
 #endif
+
+#if defined CORE_DATA_PERSISTENCE
+@dynamic values;
+#endif
+
+- (NSMutableOrderedSet *)valuesSet {
+	[self willAccessValueForKey:@"values"];
+
+	NSMutableOrderedSet *result = (NSMutableOrderedSet *)[self mutableOrderedSetValueForKey:@"values"];
+
+	[self didAccessValueForKey:@"values"];
+	return result;
+}
 
 @end
 

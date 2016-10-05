@@ -38,6 +38,7 @@ extern const struct BUYOptionAttributes {
 
 extern const struct BUYOptionRelationships {
 	__unsafe_unretained NSString *product;
+	__unsafe_unretained NSString *values;
 } BUYOptionRelationships;
 
 extern const struct BUYOptionUserInfo {
@@ -45,6 +46,7 @@ extern const struct BUYOptionUserInfo {
 } BUYOptionUserInfo;
 
 @class BUYProduct;
+@class BUYOptionValue;
 
 @class BUYOption;
 @interface BUYModelManager (BUYOptionInserting)
@@ -88,6 +90,20 @@ extern const struct BUYOptionUserInfo {
 
 @property (nonatomic, strong) BUYProduct *product;
 
+@property (nonatomic, strong) NSOrderedSet *values;
+- (NSMutableOrderedSet *)valuesSet;
+
+@end
+
+@interface _BUYOption (ValuesCoreDataGeneratedAccessors)
+
+- (void)insertObject:(BUYOptionValue *)value inValuesAtIndex:(NSUInteger)idx;
+- (void)removeObjectFromValuesAtIndex:(NSUInteger)idx;
+- (void)insertValues:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)removeValuesAtIndexes:(NSIndexSet *)indexes;
+- (void)replaceObjectInValuesAtIndex:(NSUInteger)idx withObject:(BUYOptionValue *)value;
+- (void)replaceValuesAtIndexes:(NSIndexSet *)indexes withValues:(NSArray *)values;
+
 @end
 
 @interface _BUYOption (CoreDataGeneratedPrimitiveAccessors)
@@ -103,5 +119,8 @@ extern const struct BUYOptionUserInfo {
 
 - (BUYProduct *)primitiveProduct;
 - (void)setPrimitiveProduct:(BUYProduct *)value;
+
+- (NSMutableOrderedSet *)primitiveValues;
+- (void)setPrimitiveValues:(NSMutableOrderedSet *)value;
 
 @end

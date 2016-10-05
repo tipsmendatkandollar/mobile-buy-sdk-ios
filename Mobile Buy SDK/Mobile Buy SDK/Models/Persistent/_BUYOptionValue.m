@@ -35,6 +35,7 @@ const struct BUYOptionValueAttributes BUYOptionValueAttributes = {
 };
 
 const struct BUYOptionValueRelationships BUYOptionValueRelationships = {
+	.option = @"option",
 	.variants = @"variants",
 };
 
@@ -70,6 +71,10 @@ const struct BUYOptionValueRelationships BUYOptionValueRelationships = {
 - (void)setOptionIdValue:(int64_t)value_ {
 	[self setOptionId:@(value_)];
 }
+
+#if defined CORE_DATA_PERSISTENCE
+@dynamic option;
+#endif
 
 #if defined CORE_DATA_PERSISTENCE
 @dynamic variants;
