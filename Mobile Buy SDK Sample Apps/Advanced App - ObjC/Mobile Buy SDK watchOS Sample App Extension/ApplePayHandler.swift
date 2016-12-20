@@ -46,6 +46,7 @@ class ApplePayHandler: NSObject, BUYPaymentProviderDelegate {
         self.setupPaymentProvider()
     }
     
+    /// Sets up the `BUYApplePayPaymentProvider` using the `BUYClient` and adds it to the `BUYPaymentController`
     private func setupPaymentProvider() {
         self.client = self.dataProvider.getClient()
         self.paymentProvider = BUYApplePayPaymentProvider.init(client: self.client, merchantID: self.dataProvider.merchantId)
@@ -53,6 +54,9 @@ class ApplePayHandler: NSObject, BUYPaymentProviderDelegate {
         self.paymentController.add(self.paymentProvider)
     }
     
+    /// Checkout with Apple Pay (if available) given the `BUYProductVariant` the user wants to buy
+    ///
+    /// - Parameter variant: the `BUYProductVariant` the user wants to buy
     func checkoutWithApplePay(variant: BUYProductVariant) {
         if self.isApplePayAvailable() {
             self.checkout = self.checkoutWithVariant(variant: variant)
@@ -60,12 +64,19 @@ class ApplePayHandler: NSObject, BUYPaymentProviderDelegate {
         }
     }
     
+    /// Starts the Apple Pay checkout process by using the `BUYApplePayPaymentProvider`
+    ///
+    /// - Parameter checkout: the `BUYCheckout` associated with the checkout process
     private func startApplePayCheckout(checkout: BUYCheckout) {
         if ((self.paymentProvider.delegate != nil) && (self.paymentProvider.delegate?.responds(to: #selector(BUYPaymentProviderDelegate.paymentProvider(_:wantsPaymentControllerPresented:))))!) {
                 self.paymentController.start(checkout, withProviderType: BUYApplePayPaymentProviderId)
         }
     }
     
+    /// Creates a `BUYCheckout` given the `BUYProductVariant`
+    ///
+    /// - Parameter variant: the `BUYProductVariant`
+    /// - Returns: a `BUYCheckout` containing the `BUYProductVariant`
     private func checkoutWithVariant(variant: BUYProductVariant) -> BUYCheckout {
         let modelManager = self.client.modelManager
         let cart = modelManager.insertCart(withJSONDictionary: nil)
@@ -73,14 +84,25 @@ class ApplePayHandler: NSObject, BUYPaymentProviderDelegate {
         return modelManager.checkout(with: cart!)
     }
     
+    /// Checks if Apple Pay is available through the `BUYApplePayPaymentProvider`
+    ///
+    /// - Returns: true if Apple Pay is available, else false
     private func isApplePayAvailable() -> Bool {
         return self.paymentProvider.isAvailable
     }
     
+    /// Called when a `PKPaymentAuthorizationController` needs to be dismissed
+    ///
+    /// - Parameter provider: the `BUYPaymentProvider`
     func paymentProviderWantsControllerDismissed(_ provider: BUYPaymentProvider) {
         self.interfaceController.pop()
     }
     
+    /// Called when a `PKPaymentAuthorizationController` needs to be presented
+    ///
+    /// - Parameters:
+    ///   - provider: the `BUYPaymentProvider`
+    ///   - controller: the `PKPaymentAuthorizationController` that needs to be presented
     func paymentProvider(_ provider: BUYPaymentProvider, wantsPaymentControllerPresented controller: PKPaymentAuthorizationController) {
         controller.present(completion: nil)
     }
