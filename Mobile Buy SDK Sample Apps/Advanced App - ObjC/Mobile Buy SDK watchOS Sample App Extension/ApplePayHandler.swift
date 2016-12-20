@@ -30,11 +30,12 @@ import WatchKit
 
 class ApplePayHandler: NSObject, BUYPaymentProviderDelegate {
     
-    var checkout: BUYCheckout!
-    var dataProvider: DataProvider!
-    var interfaceController: WKInterfaceController!
-    var paymentController: BUYPaymentController!
-    var paymentProvider: BUYApplePayPaymentProvider!
+    private var checkout: BUYCheckout!
+    private var client: BUYClient!
+    private var dataProvider: DataProvider!
+    private var interfaceController: WKInterfaceController!
+    private var paymentController: BUYPaymentController!
+    private var paymentProvider: BUYApplePayPaymentProvider!
     
     init(dataProvider: DataProvider, interfaceController: WKInterfaceController) {
         super.init()
@@ -46,7 +47,8 @@ class ApplePayHandler: NSObject, BUYPaymentProviderDelegate {
     }
     
     private func setupPaymentProvider() {
-        self.paymentProvider = BUYApplePayPaymentProvider.init(client: self.dataProvider.getClient(), merchantID: self.dataProvider.merchantId)
+        self.client = self.dataProvider.getClient()
+        self.paymentProvider = BUYApplePayPaymentProvider.init(client: self.client, merchantID: self.dataProvider.merchantId)
         self.paymentProvider.delegate = self
         self.paymentController.add(self.paymentProvider)
     }
@@ -65,7 +67,7 @@ class ApplePayHandler: NSObject, BUYPaymentProviderDelegate {
     }
     
     private func checkoutWithVariant(variant: BUYProductVariant) -> BUYCheckout {
-        let modelManager = self.dataProvider.getClient().modelManager
+        let modelManager = self.client.modelManager
         let cart = modelManager.insertCart(withJSONDictionary: nil)
         cart?.add(variant)
         return modelManager.checkout(with: cart!)
