@@ -43,6 +43,7 @@ class InterfaceController: WKInterfaceController {
     let merchant_id:    String = ""
     
     @IBOutlet var loadingLabel: WKInterfaceLabel!
+    @IBOutlet var loadingSpinner: WKInterfaceImage!
     @IBOutlet var productsTable: WKInterfaceTable!
     var dataProvider: DataProvider!
     var productsModel: ProductsModel!
@@ -55,6 +56,7 @@ class InterfaceController: WKInterfaceController {
         self.productsModel.getProducts {
             self.productsTable.setNumberOfRows(self.productsModel.numberOfProducts, withRowType: "ProductRow")
             self.loadingLabel.setHidden(true)
+            self.loadingSpinner.setHidden(true)
             for index in 0..<self.productsModel.numberOfProducts {
                 if let controller = self.productsTable.rowController(at: index) as? ProductRowController {
                     self.productsModel.configure(row: controller, index: index)
